@@ -38,9 +38,9 @@ pkg/
 # ========================================
 # Environment files
 # ========================================
-.env          # ignore real secrets
-.env.*        # ignore variants
-!.env.default # include template in Git
+.env
+.env.*
+!.env.default
 
 # ========================================
 # Docker
@@ -56,3 +56,4 @@ docker-compose.override.yml
 Thumbs.db
 .idea/
 *.swp
+
