@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+   # ----------------------
+   # Postgres
+   # ----------------------
+   postgres:
+      image: postgres:alpine3.22
+      container_name: techibbie-prod-postgres
+      ports:
+         - "5432:5432"
+      environment:
+         POSTGRES_USER: ${POSTGRES_USER}
+         POSTGRES_DB: ${POSTGRES_DB}
+         POSTGRES_PASSWORD_FILE: /run/secrets/pg_password
+      secrets:
+         - pg_password
+      volumes:
+         - pgdata:/var/lib/postgresql/data
+
+   # ----------------------
+   # MongoDB
+   # ----------------------
+   mongo:
+      image: mongo:latest
+      container_name: techibbie-prod-mongo
+      ports:
+         - "27017:27017"
+      environment:
+         MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+         MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+         MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
+      secrets:
+         - mongo_password
+      volumes:
+         - mongodata:/data/db
+
+# ----------------------
+# Volumes
+# ----------------------
+volumes:
+   pgdata:
+   mongodata:
+
+# ----------------------
+# Secrets
+# ----------------------
+secrets:
+   pg_password:
+      external: true
+   mongo_password:
+      external: true
