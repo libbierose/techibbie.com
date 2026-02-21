@@ -7,6 +7,8 @@ services:
    postgres:
       image: postgres:alpine3.22
       container_name: techibbie-prod-postgres
+      networks:
+         - techibbie-net
       ports:
          - "5432:5432"
       environment:
@@ -24,6 +26,8 @@ services:
    mongo:
       image: mongo:latest
       container_name: techibbie-prod-mongo
+      networks:
+         - techibbie-net
       ports:
          - "27017:27017"
       environment:
@@ -41,6 +45,13 @@ services:
 volumes:
    pgdata:
    mongodata:
+
+# ----------------------
+# Networks
+# ----------------------
+networks:
+   techibbie-net:
+      driver: bridge
 
 # ----------------------
 # Secrets
