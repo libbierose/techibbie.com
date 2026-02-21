@@ -38,6 +38,40 @@ services:
          - mongo_password
       volumes:
          - mongodata:/data/db
+   # ----------------------
+   # Auth - .Net API
+   # ----------------------
+   auth-api:
+      build:
+         context: ../../services/auth/api
+         dockerfile: docker/dockerfile.prod
+      container_name: techibbie-prod-auth-api
+      networks:
+         - techibbie-net
+      ports:
+         - "5000:5000"
+      environment:
+         DOTNET_ENV: Production
+      depends_on:
+         - postgres
+         - mongo
+
+   # ----------------------
+   # Auth - Next.js Frontend
+   # ----------------------
+   frontend:
+      build:
+         context: ../../services/auth/frontend
+         dockerfile: docker/dockerfile.prod
+      container_name: techibbie-prod-frontend
+      networks:
+         - techibbie-net
+      ports:
+         - "3000:3000"
+      environment:
+         NEXT_PUBLIC_API_URL: http://auth-api:5000
+      depends_on:
+         - auth-api
 
 # ----------------------
 # Volumes

@@ -53,6 +53,44 @@ services:
          AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
          AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
 
+   # ----------------------
+   # Auth - .Net API
+   # ----------------------
+   techibbie-auth-api:
+      container_name: techibbie-dev-auth-api
+      build:
+         context: ../../
+         dockerfile: services/auth/auth.api/Dockerfile.dev
+      networks:
+         - dev-techibbie-net
+      ports:
+         - "5000:8080"
+         - "5001:8081"
+      environment:
+         DOTNET_ENV: Development
+         ASPNETCORE_ENVIRONMENT: Development
+      depends_on:
+         - postgres
+         - mongo
+         - localstack
+
+   # ----------------------
+   # Auth - Next.js Frontend
+   # ----------------------
+   techibbie-auth-frontend:
+      container_name: techibbie-dev-auth-frontend
+      build:
+         context: ../../services/auth/frontend
+         dockerfile: docker/dockerfile.dev
+      networks:
+         - dev-techibbie-net
+      ports:
+         - "3000:3000"
+      environment:
+         NEXT_PUBLIC_API_URL: http://auth-api:5000
+      depends_on:
+         - techibbie-auth-api # assuming your .NET API service is named auth-api
+
 networks:
    dev-techibbie-net:
       driver: bridge
